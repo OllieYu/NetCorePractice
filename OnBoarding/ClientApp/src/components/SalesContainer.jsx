@@ -166,7 +166,7 @@ export class SalesContainer extends React.Component {
         productId: this.state.selectProduct,
         customerId: this.state.selectCustomer,
         storeId: this.state.selectStore,
-        dateSold:this.state.selectDate
+        dateSold: this.state.selectDate
       }),
       success: function (data) {
         this.getData()
@@ -270,6 +270,7 @@ export class SalesContainer extends React.Component {
   render() {
     const { column, data, direction, deleteModalOpen, editModalOpen, newModalOpen, activePage} = this.state
     let editdate = new Intl.DateTimeFormat('en-US',{year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date(this.state.editDate))
+    let selectdata = new Intl.DateTimeFormat('en-US',{year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date(this.state.selectDate))
     return (
       <div>
         <Button color='blue' onClick={() => this.setState({ newModalOpen: true })}>New Sale</Button>
@@ -318,7 +319,7 @@ export class SalesContainer extends React.Component {
                 <Table.Cell>{product["name"]}</Table.Cell>
                 <Table.Cell>{store["name"]}</Table.Cell>
                 <Table.Cell>{Intl.DateTimeFormat("en-US",{year: "numeric", month: "long", day: "2-digit" }).format(new Date(dateSold))}</Table.Cell>
-                <Table.Cell><Button color='yellow' onClick={() => this.setState({ editModalOpen: true, recordId: id, editCustomer: customerId, editProduct: productId, editStore: storeId, editDate:dateSold })}><Icon name='edit' />EDIT</Button></Table.Cell>
+                <Table.Cell><Button color='yellow' onClick={() => this.setState({ editModalOpen: true, recordId: id, editCustomer: customerId, selectCustomer: customerId, editProduct: productId, selectProduct: productId, editStore: storeId, selectStore: storeId, editDate:dateSold, selectDate:dateSold })}><Icon name='edit' />EDIT</Button></Table.Cell>
                 <Table.Cell><Button color='red' onClick={() => {
                   this.setState({ deleteModalOpen: true, recordId: id })
                 }
@@ -359,7 +360,7 @@ export class SalesContainer extends React.Component {
                 format='YYYY-MM-DD'
                 label='Data sold'
                 onChange={this.handleNewDate}
-                value={new Date(this.state.editDate)}        
+                value={new Date(this.state.selectDate)}        
               />
               <Form.Dropdown
                 fluid
@@ -367,7 +368,7 @@ export class SalesContainer extends React.Component {
                 options={this.state.customerData}
                 label='Customer'
                 onChange={this.handleNewCustomer}
-                defaultValue={this.state.editCustomer}
+                defaultValue={this.state.selectCustomer}
                 
               />
               <Form.Dropdown
@@ -376,7 +377,7 @@ export class SalesContainer extends React.Component {
                 options={this.state.productData}
                 label='Product'
                 onChange={this.handleNewProduct}
-                defaultValue={this.state.editProduct}
+                defaultValue={this.state.selectProduct}
               />
               <Form.Dropdown
                 fluid
@@ -384,7 +385,7 @@ export class SalesContainer extends React.Component {
                 options={this.state.storeData}
                 label='Store'
                 onChange={this.handleNewStore}
-                defaultValue={this.state.editStore}
+                defaultValue={this.state.selectStore}
               />  
             </Form>
           </Modal.Content>
@@ -393,10 +394,10 @@ export class SalesContainer extends React.Component {
               cancel
             </Button>
             <Button 
-              disabled={(this.state.selectCustomer === null || (this.state.editCustomer === this.state.selectCustomer)) 
-                        && (this.state.selectProduct === null || (this.state.editProduct === this.state.selectProduct)) 
-                        && (this.state.selectStore === null || (this.state.editStore === this.state.selectStore)) 
-                        && (this.state.selectDate === null || (editdate.toString() === this.state.selectDate))}
+              disabled={this.state.editCustomer === this.state.selectCustomer
+                        && this.state.editProduct === this.state.selectProduct 
+                        && this.state.editStore === this.state.selectStore
+                        && editdate === selectdata}
               positive
               icon='checkmark'
               labelPosition='right'
